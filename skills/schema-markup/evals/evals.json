@@ -1,0 +1,23 @@
+{
+  "skill_name": "schema-markup",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I have a SaaS landing page at example.com/product. We sell a project management tool, have 3 pricing tiers ($0, $29, $99), and about 800 reviews on G2 with 4.6 stars. Add schema markup to this page.",
+      "expected_output": "Should produce SoftwareApplication schema with AggregateOffer (3 tiers), AggregateRating, Organization with @id reference, BreadcrumbList. Should include knowsAbout and sameAs recommendations. Should mention Speakable if there's quotable content.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Here's our existing schema, it has errors: {\"@context\":\"https://schema.org\",\"@type\":\"Article\",\"author\":\"John Doe\",\"datePublished\":\"January 5, 2025\",\"headline\":\"How to optimize your website\"}. Fix it and make it better for AI visibility.",
+      "expected_output": "Should identify 3 errors: author as plain string (not Person object), date not in ISO 8601, missing required properties (image, publisher). Should fix all issues, add @id references, add speakable, add mainEntityOfPage, recommend adding author sameAs and knowsAbout.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "I run a biotech company that makes molecular biology reagents. We have a homepage, about 50 product pages, a blog with research articles, and an FAQ section. What schema should we implement across the site and in what order?",
+      "expected_output": "Should provide a prioritized implementation plan: 1) Organization+WebSite on homepage with knowsAbout for molecular biology topics, 2) BreadcrumbList sitewide, 3) Product schema on product pages, 4) Article/BlogPosting with author Person entities on blog, 5) FAQPage on FAQ section, 6) Speakable on key articles, 7) sameAs expansion. Should recommend @id strategy for cross-page entity linking.",
+      "files": []
+    }
+  ]
+}
