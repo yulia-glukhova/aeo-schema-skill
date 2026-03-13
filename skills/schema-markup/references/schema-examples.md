@@ -2,6 +2,8 @@
 
 This file contains production-ready JSON-LD examples for each common page type. Load this file when you need complete code examples to provide to the user.
 
+**Important:** These examples use placeholder values like "Brief description of what the company does." When generating real schema, replace these with EXACT text from the user's page. If the page does not contain text for a field, omit that field entirely — do not fill it with a generic description you wrote yourself.
+
 ## Table of Contents
 
 1. [Homepage — Organization + WebSite](#homepage)
@@ -124,10 +126,6 @@ This file contains production-ready JSON-LD examples for each common page type. 
         "@type": "WebPage",
         "@id": "https://example.com/blog/article-slug/#webpage"
       },
-      "speakable": {
-        "@type": "SpeakableSpecification",
-        "cssSelector": [".article-summary", ".key-takeaway", "h1"]
-      },
       "isPartOf": { "@id": "https://example.com/#website" }
     },
     {
@@ -159,7 +157,6 @@ This file contains production-ready JSON-LD examples for each common page type. 
 
 **Notes:**
 - `author` must be a `Person` object (not a plain string). This is critical for E-E-A-T and AI attribution.
-- `speakable` — point cssSelector at the most quotable parts of your article. Good candidates: the summary paragraph, definition sections, key findings. Bad candidates: navigation, footer, sidebar.
 - The last BreadcrumbList item should NOT have an `item` URL (it represents the current page).
 - `dateModified` — update this when content actually changes. Google uses it to determine freshness.
 
@@ -586,11 +583,7 @@ This example shows how a complete article page schema looks when all entities ar
         "sameAs": ["https://linkedin.com/in/janesmith"]
       },
       "publisher": { "@id": "https://example.com/#organization" },
-      "mainEntityOfPage": { "@id": "https://example.com/blog/guide/#webpage" },
-      "speakable": {
-        "@type": "SpeakableSpecification",
-        "cssSelector": [".article-summary", ".key-takeaway"]
-      }
+      "mainEntityOfPage": { "@id": "https://example.com/blog/guide/#webpage" }
     },
     {
       "@type": "BreadcrumbList",
@@ -619,4 +612,4 @@ This example shows how a complete article page schema looks when all entities ar
 }
 ```
 
-This is the gold standard: every entity has an `@id`, every relationship uses `@id` references, Organization and Person have `knowsAbout` for AI topical authority, Article has `speakable` for AEO, and the breadcrumb trail provides structural context.
+This is the gold standard: every entity has an `@id`, every relationship uses `@id` references, Organization and Person have `knowsAbout` for AI topical authority, and the breadcrumb trail provides structural context.
