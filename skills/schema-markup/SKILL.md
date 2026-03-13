@@ -5,7 +5,7 @@ description: >
   (JSON-LD) on their website. Also use when the user mentions "schema markup,"
   "structured data," "JSON-LD," "rich results," "rich snippets," "knowledge panel,"
   "entity markup," "FAQ schema," "product schema," "organization schema,"
-  "breadcrumbs schema," "speakable," "sameAs," or "entity graph."
+  "breadcrumbs schema," "sameAs," or "entity graph."
   Use this even if the user just says "add schema to my page" or "my structured data
   has errors." Covers both creating new markup from scratch and fixing/improving
   existing implementations. Includes AEO (Answer Engine Optimization) perspective —
@@ -131,7 +131,6 @@ Use this decision framework to determine which schema types to apply. Every page
 - `Article` or `BlogPosting` with full `author` → `Person` entity
 - `datePublished`, `dateModified` (ISO 8601)
 - `publisher` → linked to `Organization` via `@id`
-- `Speakable` (identifies content suitable for AI/voice readout)
 - `BreadcrumbList`
 
 ### FAQ Page
@@ -219,22 +218,6 @@ For Person entities (founders, authors):
 ## AEO: Schema for AI Systems
 
 Traditional schema optimization targets Google rich results. AEO-oriented schema additionally helps AI answer engines understand, trust, and cite your content.
-
-### Speakable
-
-The `Speakable` property tells AI and voice systems which parts of your content are most suitable for text-to-speech or direct quotation. Add it to `Article` and `WebPage` types:
-
-```json
-{
-  "@type": "Article",
-  "speakable": {
-    "@type": "SpeakableSpecification",
-    "cssSelector": [".article-summary", ".key-takeaway", "h1"]
-  }
-}
-```
-
-Point `cssSelector` at the most quotable, self-contained sections — summaries, definitions, key findings. Avoid pointing at navigation, sidebars, or boilerplate.
 
 ### Entity Clarity for LLMs
 
@@ -340,7 +323,7 @@ When reviewing or fixing existing schema, check for these frequent issues:
 - Create a partial/include for shared entities (Organization, WebSite)
 
 ### WordPress
-- **With plugins** (Yoast, Rank Math, Schema Pro): configure via plugin settings, extend with custom fields for missing properties (`speakable`, `knowsAbout`, `sameAs` array)
+- **With plugins** (Yoast, Rank Math, Schema Pro): configure via plugin settings, extend with custom fields for missing properties (`knowsAbout`, `sameAs` array)
 - **Without plugins**: add to `header.php` or via a custom plugin that injects JSON-LD based on page type
 
 ### React / Next.js / SPA
@@ -389,6 +372,24 @@ When fixing existing schema:
 3. **The corrected JSON file** — complete, not just the changed parts
 4. **Why each change matters** — impact on rich results and/or AI visibility
 
+### Critical accuracy rules
+
+**Use exact wording from the page.** When filling text fields in schema (description, HowTo step text, FAQ answers, product names), copy the exact text from the page. Do not rephrase, improve, or summarize. Schema must match what visitors see — mismatches violate Google's guidelines and confuse AI systems.
+
+**Check for encoding issues.** Before outputting JSON, scan all text for encoding artifacts: â, Â, ¬, Ã, â€", â€™ and similar corrupted characters. These appear when UTF-8 text (€, —, ', ") gets double-encoded. If found, replace with correct characters. The output JSON must be clean UTF-8.
+
+**Do not duplicate data that already exists in code.** If the user's site is built with a framework (Next.js, React, Nuxt), ask whether pricing, FAQ answers, or product data already lives in a data file or component. If yes, recommend building schema dynamically from that source rather than hardcoding values in a static JSON-LD file. Hardcoded schema goes stale when the page content changes. For static sites (Tilda, plain HTML, WordPress), static JSON-LD is fine.
+
+**Do not invent content.** This is the most important rule. Only include information that is visibly present on the page you are analyzing.
+
+- Do NOT pull facts from your own knowledge about the company, even if you are confident they are correct
+- Do NOT use information from the conversation history that isn't on the page
+- Do NOT write descriptions, summaries, or explanations that don't exist on the page — if a page has no `<meta description>` and no visible summary text, leave the `description` property out or ask the user to provide one
+- Do NOT add `founder`, `foundingDate`, `numberOfEmployees`, `author` or other entity details unless they appear on the page itself
+- If a `name` or `description` field needs text, use the exact text from the page (headings, meta tags, visible copy). Do not compose your own version
+
+The rule is simple: if you cannot point to where on the page this information appears, do not include it in the schema.
+
 ---
 
 ## Prioritization Framework
@@ -400,6 +401,5 @@ If implementing schema across an entire site, prioritize in this order:
 3. **Primary content type** — Article for blogs, Product for e-commerce, SoftwareApplication for SaaS, LocalBusiness for local
 4. **FAQPage** on pages with FAQ sections (high-impact rich result)
 5. **Person entities** for authors/team (E-E-A-T and AI attribution)
-6. **Speakable** on key content pages (AEO advantage)
-7. **sameAs expansion** — add all verifiable external references
-8. **knowsAbout** on Organization and Person entities (topical authority signal)
+6. **sameAs expansion** — add all verifiable external references
+7. **knowsAbout** on Organization and Person entities (topical authority signal)
